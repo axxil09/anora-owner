@@ -1,151 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ANORA Owner OS | Premium</title>
+
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+
     <!-- Premium Fonts & Chart.js -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <style>
-        /* --- PREMIUM DESIGN SYSTEM --- */
-        :root {
-            --bg: #F7F3EC; --surface: #FFFFFF; --text-main: #211C19; --text-muted: #9B9085;
-            --border: rgba(33, 28, 25, 0.08); --burgundy: #713F46; --terracotta: #B85C42; 
-            --gold: #B69A62; --success: #2E7D32; --danger: #C62828; --warning: #F57C00;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
-        
-        /* Icon Limiters */
-        svg { max-width: 20px; max-height: 20px; flex-shrink: 0; }
-        
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.4s ease forwards; }
-
-        /* Layout */
-        .sidebar { width: 260px; background: #211C19; color: white; padding: 30px 20px; display: flex; flex-direction: column; z-index: 10; border-right: 1px solid rgba(255,255,255,0.05);}
-        .main { flex: 1; display: flex; flex-direction: column; position: relative; }
-        .header { height: 80px; display: flex; align-items: center; padding: 0 40px; border-bottom: 1px solid var(--border); justify-content: space-between; background: rgba(247, 243, 236, 0.9); backdrop-filter: blur(10px); z-index: 5; }
-        
-        /* Branding & Nav */
-        .brand { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 40px; letter-spacing: 2px; text-align: center;}
-        .brand span { font-family: 'Inter', sans-serif; font-size: 10px; color: var(--gold); letter-spacing: 3px; display: block; margin-top: 4px; }
-        .nav-label { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; padding: 0 12px; margin-bottom: 8px; margin-top: 20px; text-transform: uppercase; font-weight: 600;}
-        .nav-item { display: flex; align-items: center; padding: 12px; color: rgba(255,255,255,0.7); text-decoration: none; border-radius: 8px; margin-bottom: 4px; font-size: 13px; font-weight: 500; transition: 0.2s; }
-        .nav-item svg { margin-right: 12px; stroke: currentColor; }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
-        .nav-item.active { background: var(--burgundy); color: white; position: relative; }
-        .nav-item.active::before { content: ''; position: absolute; left: 0; top: 20%; height: 60%; width: 3px; background: var(--terracotta); border-radius: 0 4px 4px 0; }
-        
-        /* Header Items */
-        .search-bar { display: flex; align-items: center; background: var(--surface); padding: 10px 16px; border-radius: 20px; width: 320px; border: 1px solid var(--border); transition: 0.2s; }
-        .search-bar:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(182, 154, 98, 0.1); }
-        .search-bar input { border: none; outline: none; margin-left: 10px; width: 100%; background: transparent; color: var(--text-main); font-size: 13px; }
-        .header-profile { display: flex; align-items: center; gap: 15px; }
-        .date-display { font-size: 13px; font-weight: 500; color: var(--text-muted); }
-        .avatar { width: 36px; height: 36px; background: var(--burgundy); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-family: 'Playfair Display', serif;}
-        
-        /* Content Area */
-        .content { padding: 40px; overflow-y: auto; flex: 1; scroll-behavior: smooth; }
-        .page-header { margin-bottom: 30px; }
-        .page-sub { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 5px; }
-        .page-title { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--text-main); }
-        
-        /* Cards & KPI */
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 30px; }
-        .card { background: var(--surface); padding: 24px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.02); transition: 0.2s; }
-        .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.05); transform: translateY(-2px); }
-        .kpi-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 12px; }
-        .kpi-val { font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px;}
-        .trend { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-        .trend.up { color: var(--success); } .trend.down { color: var(--danger); }
-        
-        /* Grids & Tables */
-        .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;}
-        .grid-half { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .card-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;}
-        
-        .table { width: 100%; border-collapse: collapse; }
-        .table th { text-align: left; padding: 0 0 12px 0; border-bottom: 1px solid var(--border); font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;}
-        .table td { padding: 16px 0; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 500; }
-        .table tr:hover td { background: rgba(0,0,0,0.01); }
-        
-        /* Badges & Progress */
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .badge.present { background: rgba(46, 125, 50, 0.1); color: var(--success); }
-        .badge.absent { background: rgba(198, 40, 40, 0.1); color: var(--danger); }
-        .badge.leave { background: rgba(245, 124, 0, 0.1); color: var(--warning); }
-        .badge.healthy { background: rgba(46, 125, 50, 0.1); color: var(--success); }
-        .badge.low { background: rgba(198, 40, 40, 0.1); color: var(--danger); }
-        
-        .stock-bar { width: 100%; height: 6px; background: var(--bg); border-radius: 3px; margin-top: 6px; overflow: hidden; }
-        .stock-fill { height: 100%; border-radius: 3px; }
-        
-        /* Buttons & Forms */
-        .btn { background: var(--burgundy); color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-outline:hover { border-color: var(--text-muted); }
-        .btn-small { padding: 6px 12px; font-size: 11px; }
-        
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;}
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; font-family: 'Inter'; font-size: 13px; background: var(--bg); color: var(--text-main); transition: 0.2s;}
-        .form-group input:focus { border-color: var(--gold); }
-        
-        /* Insights Card */
-        .insight-item { display: flex; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-        .insight-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .insight-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--bg); display: flex; align-items: center; justify-content: center; color: var(--burgundy); }
-        .insight-text { flex: 1; }
-        .insight-text h4 { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
-        .insight-text p { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
-
-        /* Toast */
-        #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 2000; display: flex; flex-direction: column; gap: 10px;}
-        .toast { background: var(--espresso); color: white; padding: 16px 24px; border-radius: 8px; font-size: 13px; font-weight: 500; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 10px; animation: fadeIn 0.3s ease forwards;}
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    </script>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
+    <!-- ===== SIDEBAR ===== -->
     <div class="sidebar">
         <div class="brand">ANORA<span>OWNER OS</span></div>
-        
+
         <div class="nav-label">Overview</div>
         <a href="#" class="nav-item active" onclick="navigate('dashboard', this)">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2"></path></svg>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" /></svg>
             Dashboard
         </a>
-        
+
         <div class="nav-label">Operations</div>
         <a href="#" class="nav-item" onclick="navigate('inventory', this)">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="currentColor" stroke-width="2"></polyline><line x1="12" y1="22.08" x2="12" y2="12" stroke="currentColor" stroke-width="2"></line></svg>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="currentColor" stroke-width="2" /><line x1="12" y1="22.08" x2="12" y2="12" stroke="currentColor" stroke-width="2" /></svg>
             Inventory
         </a>
-        
+
         <div class="nav-label">People</div>
         <a href="#" class="nav-item" onclick="navigate('staff', this)">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"></path><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2"></path><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2"></path></svg>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" /><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" /></svg>
             Attendance & Staff
         </a>
 
         <div class="nav-label">System</div>
         <a href="#" class="nav-item" onclick="navigate('settings', this)">
-            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"></path></svg>
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2" /></svg>
             Menu Settings
         </a>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- ===== MAIN APP ===== -->
     <div class="main">
+        <!-- Header -->
         <div class="header">
             <div class="search-bar">
-                <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"></circle><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2"></line></svg>
-                <input type="text" id="global-search" placeholder="Search orders, staff, inventory...">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" /><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" /></svg>
+                <input type="text" id="global-search" placeholder="Search orders, staff, inventory..." />
             </div>
             <div class="header-profile">
                 <div class="date-display">Tuesday, 18 August 2026</div>
@@ -156,360 +61,15 @@
                 </div>
             </div>
         </div>
-        
-        <div class="content" id="view-container">
-            <!-- Dynamic Content -->
-        </div>
+
+        <!-- Dynamic Content -->
+        <div class="content" id="view-container"></div>
     </div>
+
+    <!-- Toast Container -->
     <div id="toast-container"></div>
 
-    <script>
-        // 1. ADVANCED DEMO DATA SETUP
-        if (!localStorage.getItem('anora_v2_setup')) {
-            const initialData = {
-                sales: ['₹8.42L', '₹9.18L', '₹9.74L', '₹10.62L', '₹11.96L', '₹12.84L'],
-                menu: [
-                    { id: 1, name: 'Truffle Chicken Burger', price: 329, offer: '' },
-                    { id: 2, name: 'Cappuccino', price: 189, offer: '10% OFF' },
-                    { id: 3, name: 'Iced Latte', price: 219, offer: '' }
-                ],
-                staff: [
-                    { id: 'ANR-01', name: 'Rahul Sharma', role: 'Senior Barista', salary: 22000, paid: false, attendance: 'Present' },
-                    { id: 'ANR-02', name: 'Aman Kumar', role: 'Head Chef', salary: 35000, paid: true, attendance: 'Present' },
-                    { id: 'ANR-03', name: 'Priya Singh', role: 'Cashier', salary: 18000, paid: false, attendance: 'Leave' },
-                    { id: 'ANR-04', name: 'Riya Verma', role: 'Waiter', salary: 15000, paid: false, attendance: 'Absent' }
-                ],
-                inventory: [
-                    { id: 'INV-1', item: 'Arabica Coffee Beans', qty: 2.5, unit: 'KG', max: 15, status: 'Low' },
-                    { id: 'INV-2', item: 'Full Cream Milk', qty: 42, unit: 'L', max: 50, status: 'Healthy' },
-                    { id: 'INV-3', item: 'Burger Buns', qty: 15, unit: 'Pcs', max: 100, status: 'Low' },
-                    { id: 'INV-4', item: 'Paper Cups (M)', qty: 850, unit: 'Pcs', max: 1000, status: 'Healthy' }
-                ],
-                recent_orders: [
-                    { id: '#ANR-1082', type: 'Dine In', amount: 1077, status: 'Preparing' },
-                    { id: '#ANR-1081', type: 'Takeaway', amount: 489, status: 'Ready' },
-                    { id: '#ANR-1080', type: 'Dine In', amount: 782, status: 'Completed' }
-                ]
-            };
-            
-            for (const [key, value] of Object.entries(initialData)) {
-                localStorage.setItem(key, JSON.stringify(value));
-            }
-            localStorage.setItem('anora_v2_setup', 'true');
-        }
-
-        // 2. PREMIUM TOAST
-        function showToast(msg) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> <span>${msg}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        // 3. DASHBOARD VIEW
-        function renderDashboard() {
-            const orders = JSON.parse(localStorage.getItem('recent_orders'));
-            
-            document.getElementById('view-container').innerHTML = `
-                <div class="fade-in">
-                    <div class="page-header">
-                        <div class="page-sub">Overview</div>
-                        <div class="page-title">Good Evening, Krishna.</div>
-                    </div>
-                    
-                    <div class="kpi-grid">
-                        <div class="card"><div class="kpi-title">Today's Sales</div><div class="kpi-val">₹48,920</div><div class="trend up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg> +12.4% vs yesterday</div></div>
-                        <div class="card"><div class="kpi-title">Orders</div><div class="kpi-val">184</div><div class="trend up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg> +8.2%</div></div>
-                        <div class="card"><div class="kpi-title">Avg Order Value</div><div class="kpi-val">₹266</div><div class="trend up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg> +4.7%</div></div>
-                        <div class="card"><div class="kpi-title">Est. Profit</div><div class="kpi-val">₹17,842</div><div class="trend up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg> +9.8%</div></div>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="card">
-                            <div class="card-title">Revenue Growth (6 Months)</div>
-                            <div style="height: 280px; width: 100%; position:relative;"><canvas id="salesChart"></canvas></div>
-                        </div>
-                        
-                        <div>
-                            <div class="card" style="margin-bottom: 24px;">
-                                <div class="card-title">Anora Smart Insights</div>
-                                <div class="insight-item">
-                                    <div class="insight-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg></div>
-                                    <div class="insight-text">
-                                        <h4>Inventory Alert</h4>
-                                        <p>Arabica Coffee Beans & Burger Buns are critically low. Restock recommended today.</p>
-                                    </div>
-                                </div>
-                                <div class="insight-item">
-                                    <div class="insight-icon" style="color:var(--success)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></div>
-                                    <div class="insight-text">
-                                        <h4>Sales Performance</h4>
-                                        <p>Truffle Chicken Burger generated the highest gross profit this week.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card">
-                                <div class="card-title">Live Orders</div>
-                                <table class="table">
-                                    <tbody>
-                                        ${orders.map(o => `
-                                            <tr>
-                                                <td><div style="font-weight:600">${o.id}</div><div style="font-size:11px;color:var(--text-muted)">${o.type}</div></td>
-                                                <td style="font-weight:600; text-align:right;">₹${o.amount}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            setTimeout(() => {
-                const ctx = document.getElementById('salesChart');
-                if(!ctx) return;
-                const rawData = JSON.parse(localStorage.getItem('sales'));
-                const numericData = rawData.map(val => parseFloat(val.replace('₹', '').replace('L', '')));
-                
-                if (window.myChart) window.myChart.destroy();
-                
-                window.myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['March', 'April', 'May', 'June', 'July', 'August'],
-                        datasets: [{
-                            label: 'Revenue (Lakhs)',
-                            data: numericData,
-                            borderColor: '#713F46', backgroundColor: 'rgba(113, 63, 70, 0.1)',
-                            borderWidth: 3, fill: true, tension: 0.4, pointRadius: 4
-                        }]
-                    },
-                    options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { border: {display: false}, grid: {color: 'rgba(0,0,0,0.05)'} }, x: { grid: {display: false} } } }
-                });
-            }, 50);
-        }
-
-        // 4. INVENTORY VIEW (Stock Management)
-        function renderInventory() {
-            const inv = JSON.parse(localStorage.getItem('inventory'));
-            document.getElementById('view-container').innerHTML = `
-                <div class="fade-in">
-                    <div class="page-header">
-                        <div class="page-sub">Stock & Suppliers</div>
-                        <div class="page-title">Inventory Management</div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
-                            Current Stock Levels
-                            <button class="btn btn-outline btn-small" onclick="showToast('Feature locked in demo mode')">+ Add Item</button>
-                        </div>
-                        <table class="table">
-                            <thead><tr><th>Item Name</th><th>Current Stock</th><th>Capacity Limit</th><th>Status</th><th>Action</th></tr></thead>
-                            <tbody class="searchable">
-                                ${inv.map(i => {
-                                    const percent = (i.qty / i.max) * 100;
-                                    const barColor = percent < 25 ? 'var(--danger)' : 'var(--success)';
-                                    return `
-                                    <tr>
-                                        <td><strong style="font-size:14px;">${i.item}</strong><br><span style="font-size:11px;color:gray">ID: ${i.id}</span></td>
-                                        <td style="width: 25%;">
-                                            <div style="font-weight:600;">${i.qty} ${i.unit}</div>
-                                            <div class="stock-bar"><div class="stock-fill" style="width: ${percent}%; background: ${barColor}"></div></div>
-                                        </td>
-                                        <td style="color:var(--text-muted)">${i.max} ${i.unit}</td>
-                                        <td><span class="badge ${i.status.toLowerCase()}">${i.status}</span></td>
-                                        <td><button class="btn btn-small" onclick="restock('${i.id}')">Restock</button></td>
-                                    </tr>
-                                    `;
-                                }).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }
-
-        // 5. STAFF & ATTENDANCE VIEW
-        function renderStaff() {
-            const staff = JSON.parse(localStorage.getItem('staff'));
-            document.getElementById('view-container').innerHTML = `
-                <div class="fade-in">
-                    <div class="page-header">
-                        <div class="page-sub">People & Payroll</div>
-                        <div class="page-title">Staff Operations</div>
-                    </div>
-
-                    <div class="grid-half">
-                        <!-- ATTENDANCE -->
-                        <div class="card">
-                            <div class="card-title">Today's Attendance</div>
-                            <table class="table">
-                                <thead><tr><th>Employee</th><th>Mark Status</th><th>Current</th></tr></thead>
-                                <tbody class="searchable">
-                                    ${staff.map(s => `
-                                        <tr>
-                                            <td><strong style="font-size:13px;">${s.name}</strong><br><span style="font-size:10px;color:gray">${s.role}</span></td>
-                                            <td>
-                                                <select onchange="updateAttendance('${s.id}', this.value)" style="padding:4px; font-size:11px; border-radius:4px; border:1px solid var(--border);">
-                                                    <option value="Present" ${s.attendance==='Present'?'selected':''}>Present</option>
-                                                    <option value="Absent" ${s.attendance==='Absent'?'selected':''}>Absent</option>
-                                                    <option value="Leave" ${s.attendance==='Leave'?'selected':''}>Leave</option>
-                                                </select>
-                                            </td>
-                                            <td><span class="badge ${s.attendance.toLowerCase()}">${s.attendance}</span></td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- PAYROLL -->
-                        <div class="card">
-                            <div class="card-title">Salary Clearance (August)</div>
-                            <table class="table">
-                                <thead><tr><th>Employee</th><th>Payable Amount</th><th>Action</th></tr></thead>
-                                <tbody class="searchable">
-                                    ${staff.map(s => `
-                                        <tr>
-                                            <td style="font-weight:600;">${s.name}</td>
-                                            <td style="font-weight:700;">₹${s.salary}</td>
-                                            <td>
-                                                ${!s.paid ? `<button class="btn btn-small" onclick="paySalary('${s.id}')">Pay Now</button>` : `<span style="color:var(--success);font-size:11px;font-weight:700;">✓ PAID</span>`}
-                                            </td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // 6. SETTINGS VIEW (Menu)
-        function renderSettings() {
-            const menu = JSON.parse(localStorage.getItem('menu'));
-            document.getElementById('view-container').innerHTML = `
-                <div class="fade-in">
-                    <div class="page-header">
-                        <div class="page-sub">System Management</div>
-                        <div class="page-title">Menu Pricing & Offers</div>
-                    </div>
-                    
-                    <div class="grid-2">
-                        <div class="card">
-                            <div class="card-title">Add / Update Item</div>
-                            <form onsubmit="saveMenu(event)">
-                                <input type="hidden" id="menu-id" value="">
-                                <div class="form-group"><label>Item Name</label><input type="text" id="menu-name" required placeholder="e.g. Garlic Bread"></div>
-                                <div class="grid-half" style="gap:16px;">
-                                    <div class="form-group"><label>Price (₹)</label><input type="number" id="menu-price" required></div>
-                                    <div class="form-group"><label>Special Offer</label><input type="text" id="menu-offer" placeholder="e.g. Buy 1 Get 1"></div>
-                                </div>
-                                <button type="submit" class="btn" style="width:100%">Save to Menu</button>
-                            </form>
-                        </div>
-                        
-                        <div class="card" style="max-height: 500px; overflow-y:auto;">
-                            <div class="card-title">Current Menu</div>
-                            <table class="table">
-                                <thead><tr><th>Item</th><th>Price</th><th>Offer</th><th></th></tr></thead>
-                                <tbody class="searchable">
-                                    ${menu.map(m => `
-                                        <tr>
-                                            <td style="font-weight:600">${m.name}</td><td>₹${m.price}</td><td style="color:var(--terracotta);font-weight:600;font-size:11px;">${m.offer || '-'}</td>
-                                            <td style="text-align:right;"><button class="btn btn-outline btn-small" onclick="editMenu(${m.id}, '${m.name}', ${m.price}, '${m.offer}')">Edit</button></td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // --- INTERACTIVE LOGIC ---
-
-        function restock(id) {
-            let inv = JSON.parse(localStorage.getItem('inventory'));
-            let item = inv.find(i => i.id === id);
-            item.qty = item.max; // Refill to max capacity
-            item.status = 'Healthy';
-            localStorage.setItem('inventory', JSON.stringify(inv));
-            showToast(`${item.item} has been restocked to full capacity.`);
-            renderInventory();
-        }
-
-        function updateAttendance(id, status) {
-            let staff = JSON.parse(localStorage.getItem('staff'));
-            let emp = staff.find(s => s.id === id);
-            emp.attendance = status;
-            localStorage.setItem('staff', JSON.stringify(staff));
-            showToast(`${emp.name} marked as ${status}`);
-            renderStaff();
-        }
-
-        function paySalary(id) {
-            let staff = JSON.parse(localStorage.getItem('staff'));
-            let emp = staff.find(s => s.id === id);
-            emp.paid = true;
-            localStorage.setItem('staff', JSON.stringify(staff));
-            showToast(`Salary of ₹${emp.salary} paid to ${emp.name}`);
-            renderStaff();
-        }
-
-        function saveMenu(e) {
-            e.preventDefault();
-            const id = document.getElementById('menu-id').value;
-            const name = document.getElementById('menu-name').value;
-            const price = document.getElementById('menu-price').value;
-            const offer = document.getElementById('menu-offer').value;
-            let menu = JSON.parse(localStorage.getItem('menu'));
-            if (id) {
-                let item = menu.find(m => m.id == id);
-                item.name = name; item.price = price; item.offer = offer;
-                showToast(`Price updated for ${name}`);
-            } else {
-                menu.unshift({ id: Date.now(), name, price, offer });
-                showToast(`${name} added to Menu`);
-            }
-            localStorage.setItem('menu', JSON.stringify(menu));
-            renderSettings();
-        }
-
-        function editMenu(id, name, price, offer) {
-            document.getElementById('menu-id').value = id;
-            document.getElementById('menu-name').value = name;
-            document.getElementById('menu-price').value = price;
-            document.getElementById('menu-offer').value = offer;
-        }
-
-        // GLOBAL SEARCH
-        document.getElementById('global-search').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase();
-            document.querySelectorAll('.searchable tr').forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(query) ? '' : 'none';
-            });
-        });
-
-        // ROUTING
-        function navigate(page, el) {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-            if(page === 'dashboard') renderDashboard();
-            if(page === 'inventory') renderInventory();
-            if(page === 'staff') renderStaff();
-            if(page === 'settings') renderSettings();
-        }
-
-        // Start
-        renderDashboard();
-    </script>
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>
